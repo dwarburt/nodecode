@@ -6,9 +6,27 @@ body {
 a {
   color: #00B7FF;
 }
-
-#messages {
+#hidden {
+  display:none;
+}
+#chat > div {
   height: 200px;
-  border: 1px solid red;
+  display: inline-block;
+  vertical-align: top;
   overflow: auto;
+  margin: 5px;
+}
+#messages {
+  border: 1px solid red;
+  width: 70%;
+}
+#user-list {
+  width: 27%;
+  border: 1px solid black;
+  max-width: 300px;
+  min-width: 100px;
+}
+#user-list .editor {
+  font-style: bold;
+  border: 1px solid yellow;
 }

@@ -3,8 +3,24 @@ extends layout
 block content
   h1= title
   p Welcome to #{title}
-  p Codeid is #{codeid}
+  #hidden
+    #hidden_code
+      = code.code
+    #hidden_id
+      = code._id
+
+  div
+    span Number of connected users:
+    span#user-count
   #chat
-    pre#messages
-    input(type="text")
-    button Send message
+    div#user-list
+    div#messages
+  #chat-control
+    input(type="text" id="chatmsg")
+    button#send-message Send message
+    input(type="text" id="name")
+    button#set-name Set Name
+
+  #code
+  button#compile Compile and Run
+  pre#output(disabled=true)
