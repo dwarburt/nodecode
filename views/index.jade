@@ -1,0 +1,10 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{title}
+  p Codeid is #{codeid}
+  #chat
+    pre#messages
+    input(type="text")
+    button Send message
