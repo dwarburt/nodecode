@@ -1,3 +1,6 @@
+var fs = require('fs');
+var child_process = require('child_process');
+
 function Room(roomId) {
     this.count = 0;
     this.id = roomId;
@@ -115,8 +118,60 @@ module.exports = {
             }
         });
         socket.on('compile', function (msg) {
-            self.broadcast(socket.room, 'compilation', {output: "Compile error\n(not really)" });
-        })
+            //1 get a temp dir
+            var room = self.rooms[socket.room];
+
+            var tmpdir = "/tmp/" + room.id; 
+            var fs = require('fs');
+            var output = ""
+            if (!fs.existsSync(tmpdir)) {
+                fs.mkdirSync(tmpdir);
+            }
+            fs.writeFile(tmpdir + "/a.cpp", room.code, function(err) {
+                if(err) {
+                    self.broadcast(room.id, 'compilation', {output: "Failed to save file\nCopy your code to a new room\n" + err});
+                }
+                else {
+                    child_process.exec("g++ a.cpp", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
+                        if (stdOut && stdOut != "") {
+                            output += stdOut;
+                            output += "\n";
+                        }
+                        if (stdErr && stdErr != "") {
+                            output += stdErr;
+                            output += "\n";
+                        }
+                        if (error) {
+                            output += error;
+                            self.broadcast(socket.room, 'compilation', {output: output });
+                        }
+                        else {
+                            output += "\n Compilation success!\nRunning command\n\n";
+                            child_process.exec("./a.out", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
+                                if (stdOut && stdOut != "") {
+                                    output += stdOut;
+                                    output += "\n";
+                                }
+                                if (stdErr && stdErr != "") {
+                                    output += stdErr;
+                                    output += "\n";
+                                }
+                               if (error) {
+                                    output += "\n";
+                                    output += error;
+                                    output += "\nERROR";
+                                }
+                                else {
+                                    output += "\nSUCCESS";
+                                }
+                                self.broadcast(socket.room, 'compilation', {output: output });
+                            });
+                        }
+                    });
+                }
+            }); 
+            //self.broadcast(socket.room, 'compilation', {output: "Compile error\n(not really)" });
+        });
     },
     elevate: function(socket) {
         var self = this;
