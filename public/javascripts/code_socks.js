@@ -54,28 +54,32 @@ $(function() {
     function onEdit(instance, changes) {
         socket.emit('edit', {changes: changes});
     }
-    codeMirror.on('changes', onEdit);
 
     socket.on('edit', function (msg) {
-        codeMirror.off('changes', onEdit);
-        for (i = 0; i < msg.changes.length; i++) {
-            var change = msg.changes[i];
-            codeMirror.replaceRange(change.text, change.from,
-                change.to, change.origin);
+        if (msg.code) {
+            codeMirror.setValue(msg.code);
         }
-
+        else {
+            for (i = 0; i < msg.changes.length; i++) {
+                var change = msg.changes[i];
+                codeMirror.replaceRange(change.text, change.from,
+                    change.to, change.origin);
+            }
+        }        
     });
     socket.on('elevate', function (msg) {
-        log("YOU are now the editor");
-        $('#user-list').find('#' + msg.id).addClass('editor');
+        codeMirror.on('changes', onEdit);
         codeMirror.setOption('readOnly', false);
         $('#compile').attr('disabled', false);
+        log("YOU are now the editor");
+        $('#user-list').find('#' + msg.id).addClass('editor');
     });
     socket.on('editor', function (msg) {
+        codeMirror.off('changes', onEdit);
         codeMirror.setOption('readOnly', true);
+        $('#compile').attr('disabled', true);
         log(msg.name + " is now the editor");
         $('#user-list').find('#' + msg.id).addClass('editor');
-        $('#compile').attr('disabled', true);
     })
     socket.emit('join', codeId);
 

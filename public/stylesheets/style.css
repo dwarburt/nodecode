@@ -9,8 +9,8 @@ a {
 #hidden {
   display:none;
 }
-#chat > div {
-  height: 200px;
+div.twobox > div {
+  min-height: 200px;
   display: inline-block;
   vertical-align: top;
   overflow: auto;
@@ -29,4 +29,11 @@ a {
 #user-list .editor {
   font-style: bold;
   border: 1px solid yellow;
+}
+#code {
+  width: 50%;
+}
+#output {
+  width: 50%;
+  display:block;
 }
