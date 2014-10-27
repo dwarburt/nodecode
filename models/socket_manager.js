@@ -61,6 +61,7 @@ module.exports = {
         var self = this;
         console.log("Saving the socket: " + socket.id);
         self.sockBucket[socket.id] = socket;
+        socket.emit('id', {id: socket.id});
         socket.on('disconnect', function(reason) {
             console.log("Socket " + socket.id + " is gone.");
             delete self.sockBucket[socket.id];
@@ -117,11 +118,19 @@ module.exports = {
                 self.elevate(socket);
             }
         });
+        socket.on('promote', function (name) {
+            self.eachOther(socket, function (idx) {
+                if (name != idx.name) {
+                    idx.emit('editor')
+                }
+            })
+        })
         socket.on('compile', function (msg) {
             //1 get a temp dir
             var room = self.rooms[socket.room];
+            var tmphome = process.env.NODECODE_HOME || "/home/coder/rooms/";
 
-            var tmpdir = "/tmp/" + room.id; 
+            var tmpdir = tmphome + room.id;
             var fs = require('fs');
             var output = ""
             if (!fs.existsSync(tmpdir)) {
@@ -132,7 +141,7 @@ module.exports = {
                     self.broadcast(room.id, 'compilation', {output: "Failed to save file\nCopy your code to a new room\n" + err});
                 }
                 else {
-                    child_process.exec("g++ a.cpp", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
+                    child_process.exec("g++ -Wall a.cpp", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
                         if (stdOut && stdOut != "") {
                             output += stdOut;
                             output += "\n";
@@ -146,8 +155,9 @@ module.exports = {
                             self.broadcast(socket.room, 'compilation', {output: output });
                         }
                         else {
-                            output += "\n Compilation success!\nRunning command\n\n";
-                            child_process.exec("./a.out", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
+                            output += "Compilation success!\nRunning command\n\n";
+                            var command_prefix = process.env.NODECODE_EXEC_PREFIX || "sudo -u coder unshare -n ";
+                            child_process.exec(command_prefix + "./a.out", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
                                 if (stdOut && stdOut != "") {
                                     output += stdOut;
                                     output += "\n";
@@ -169,7 +179,7 @@ module.exports = {
                         }
                     });
                 }
-            }); 
+            });
             //self.broadcast(socket.room, 'compilation', {output: "Compile error\n(not really)" });
         });
     },

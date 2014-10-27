@@ -8,12 +8,24 @@ $(function() {
     function updateCount(msg) {
         $('#user-count').text(msg.count);
     }
-    window.socketId = socket.id;
-    socket.on('join', function(msg) {
+    var code_socks = {
+        id: null,
+        editor: null,
+        isNewEditor: function (id) {
+            if (this.editor == id)
+                return false;
+            this.editor = id;
+            return true;
+        }
+    };
+    socket.on('id', function (msg) {
+        code_socks.id = msg.id;
+    });
+    socket.on('join', function (msg) {
         updateCount(msg);
         $('#user-list').append($('<div>').attr('id', msg.name).text(msg.name));
     });
-    socket.on('part', function(msg) {
+    socket.on('part', function (msg) {
         updateCount(msg);
         $('#user-list').find('#' + msg.id).remove();
     });
@@ -24,11 +36,11 @@ $(function() {
         log(msg.name + " says: " + msg.msg);
     });
 
-    $('#set-name').click(function() {
+    $('#set-name').click(function () {
         var name = $('#name').val();
         socket.emit('name', name);
     });
-    $('#send-message').click(function() {
+    $('#send-message').click(function () {
         var msg = $('#chatmsg').val();
         if (msg != "") {
             socket.emit('chat', msg);
@@ -65,21 +77,34 @@ $(function() {
                 codeMirror.replaceRange(change.text, change.from,
                     change.to, change.origin);
             }
-        }        
+        }
     });
-    socket.on('elevate', function (msg) {
+    function elevate() {
+
         codeMirror.on('changes', onEdit);
         codeMirror.setOption('readOnly', false);
         $('#compile').attr('disabled', false);
         log("YOU are now the editor");
+        $('#user-list').find('.editor').removeClass('editor');
         $('#user-list').find('#' + msg.id).addClass('editor');
-    });
-    socket.on('editor', function (msg) {
+    }
+    function shame(msg) {
         codeMirror.off('changes', onEdit);
         codeMirror.setOption('readOnly', true);
         $('#compile').attr('disabled', true);
         log(msg.name + " is now the editor");
+        $('#user-list').find('.editor').removeClass('editor');
         $('#user-list').find('#' + msg.id).addClass('editor');
+    }
+    socket.on('elevate', function (msg) {
+        if (!code_socks.isNewEditor(msg.id))
+            return;
+        elevate();
+    });
+    socket.on('editor', function (msg) {
+        if (!code_socks.isNewEditor(msg.id))
+            return;
+        shame(msg);
     })
     socket.emit('join', codeId);
 
