@@ -79,7 +79,7 @@ $(function() {
             }
         }
     });
-    function elevate() {
+    function elevate(msg) {
 
         codeMirror.on('changes', onEdit);
         codeMirror.setOption('readOnly', false);
@@ -99,7 +99,7 @@ $(function() {
     socket.on('elevate', function (msg) {
         if (!code_socks.isNewEditor(msg.id))
             return;
-        elevate();
+        elevate(msg);
     });
     socket.on('editor', function (msg) {
         if (!code_socks.isNewEditor(msg.id))
