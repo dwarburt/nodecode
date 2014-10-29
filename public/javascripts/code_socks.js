@@ -22,10 +22,12 @@ $(function() {
     });
     socket.on('join', function (msg) {
         updateCount(msg);
-        $('#user-list').append($('<div>').attr('id', msg.name).text(msg.name));
+        $('#user-list').append($('<div>').attr('id', msg.id).addClass("participant").text(msg.name));
     });
     socket.on('part', function (msg) {
+        console.log("Removing: " + msg.id);
         updateCount(msg);
+
         $('#user-list').find('#' + msg.id).remove();
     });
     socket.on('name', function (msg) {
@@ -39,13 +41,14 @@ $(function() {
         var name = $('#name').val();
         socket.emit('name', name);
     });
-    $('#send-message').click(function () {
+    $('#talk').submit(function (e) {
+        e.preventDefault();
         var msg = $('#chatmsg').val();
         if (msg != "") {
             socket.emit('chat', msg);
         }
         $('#chatmsg').val("");
-    });
+    })
     $('#compile').click(function () {
         socket.emit('compile', {code: codeMirror.getValue() });
     });

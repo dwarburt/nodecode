@@ -1,26 +1,23 @@
 extends layout
 
 block content
-  h1= title
-  h2 BETA BETA BETA
-  p Welcome to #{title}
-
-  div
-    span Number of connected users:
-    span#user-count
-  #chat.twobox
-    div#user-list
-    div#messages
-  #chat-control
-    input(type="text" id="chatmsg")
-    button#send-message Send message
-    input(type="text" id="name")
-    button#set-name Set Name
-
-  .twobox
-    #code
-      button#compile Compile and Run
-    div
-      span Output
-      div.graybox
+  div#main-content
+    div#work-zone
+      h2 BETA BETA BETA
+      #code
+        button#compile Compile and Run
+      div
+        span Output
         pre#output
+    div#chat-zone
+      div#user-list
+        &nbsp;
+      div#messages
+      form#talk
+        input(type="text" id="chatmsg")
+        button#send-message Send message
+      form#settings
+        input(type="text" id="name")
+        button#set-name Set Name
+
+  

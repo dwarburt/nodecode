@@ -1,39 +1,79 @@
 body {
-  padding: 50px;
+  margin: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
-
+#header {
+  height: 50px;
+  background-color: #4679bd;
+}
+#header .title {
+  float: right;
+  width: 200px;
+  padding: 0 7px 0 10px;
+  font-size: 40px;
+  color: #FFF;
+  background-color: #3E313C;
+  height: 50px;
+}
+#chat-zone {
+  float:right;
+  padding: 0 7px 0 10px;
+  width: 200px;
+  background-color: #ab9ba9;
+  position: absolute;
+  top: 50px;
+  right: 0px;
+  height: 100%;
+}
+#work-zone {
+  margin-right: 200px;
+}
+#settings {
+  display:none;
+}
+#talk {
+  float: right;
+  width: 200px;
+  background: #3e313c;
+  border-top: 2px solid #372c36;
+  padding: 10px 7px 0px 10px;
+  height: 4rem;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
 a {
   color: #00B7FF;
 }
 #hidden {
   display:none;
 }
-div.twobox > div {
-  min-height: 200px;
-  display: inline-block;
-  vertical-align: top;
-  overflow: auto;
-  margin: 5px;
-}
+
 #messages {
-  border: 1px solid red;
-  width: 70%;
+  font-size: 12px;
+  width: 190px;
+  background-color: white;
+  padding: 10px 0px 5px 7px;
+  clear:both;
 }
 #user-list {
-  width: 27%;
-  border: 1px solid black;
-  max-width: 300px;
-  min-width: 100px;
+  padding: 2px;
+  font-family: Lato, sans-serif;
+  margin-top: 5px;
+  font-size: 12px;
+}
+#user-list .participant {
+  padding: 4px;
+  float: left;
+  background: rgba(0, 128, 0, 0.39);
+  margin: 3px;
+  border-radius: 10px;
 }
 #user-list .editor {
-  font-style: bold;
-  border: 1px solid yellow;
+
 }
 #code {
-  width: 50%;
+
 }
 #output {
-  width: 50%;
-  display:block;
 }

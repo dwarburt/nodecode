@@ -1,4 +1,5 @@
 var fs = require('fs');
+var shortid = require('shortid');
 var child_process = require('child_process');
 
 function Room(roomId) {
@@ -61,14 +62,15 @@ module.exports = {
         var self = this;
         console.log("Saving the socket: " + socket.id);
         self.sockBucket[socket.id] = socket;
-        socket.emit('id', {id: socket.id});
+        socket.name = shortid.generate();
+        socket.emit('id', { id: socket.id });
         socket.on('disconnect', function(reason) {
             console.log("Socket " + socket.id + " is gone.");
             delete self.sockBucket[socket.id];
             if (socket.room) {
                 var room = self.rooms[socket.room];
                 room.count--;
-                self.broadcast(socket.room, 'part', {count: room.count, name: socket.id, id: socket.id});
+                self.broadcast(socket.room, 'part', {count: room.count, name: socket.name, id: socket.id});
                 if (room.editor == socket.id && room.count > 0) {
                     //get the next first socket in the list
                     for (var id in self.sockBucket) {
@@ -78,10 +80,7 @@ module.exports = {
                         }
                         self.elevate(idx);
                         break;
-                    }
-                }
-            }
-        });
+        }   }   }   });
         socket.on('name', function (name) {
             socket.name = name;
             self.broadcast(socket.room, 'name', {id: socket.id, name: name});
@@ -106,7 +105,7 @@ module.exports = {
                 self.rooms[roomId] = room;
             }
             room.count++;
-            self.broadcast(socket.room, 'join', {count: room.count, name: socket.id, id: socket.id});
+            self.broadcast(socket.room, 'join', {count: room.count, name: socket.name, id: socket.id});
             self.eachOther(socket, function (idx) {
                 socket.emit('join', {count: room.count, name: idx.name, id: idx.id});
                 if (room.editor == idx.id) {
@@ -124,9 +123,8 @@ module.exports = {
                     idx.emit('editor')
                 }
             })
-        })
+        });
         socket.on('compile', function (msg) {
-            //1 get a temp dir
             var room = self.rooms[socket.room];
             var tmphome = process.env.NODECODE_HOME || "/home/coder/rooms/";
 
