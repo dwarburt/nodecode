@@ -96,13 +96,16 @@ module.exports = {
                 idx.emit('edit', msg);
             });
         });
-        socket.on('join', function (roomId) {
-            socket.room = roomId;
-            socket.join(roomId);
-            var room = self.rooms[roomId];
+        socket.on('join', function (msg) {
+            socket.room = msg.room;
+            if (msg.name) {
+                socket.name = msg.name;
+            }
+            socket.join(msg.room);
+            var room = self.rooms[msg.room];
             if (!room) {
-                room = new Room(roomId);
-                self.rooms[roomId] = room;
+                room = new Room(msg.room);
+                self.rooms[msg.room] = room;
             }
             room.count++;
             self.broadcast(socket.room, 'join', {count: room.count, name: socket.name, id: socket.id});

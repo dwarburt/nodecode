@@ -39,6 +39,9 @@ $(function() {
 
     $('#set-name').click(function () {
         var name = $('#name').val();
+        if (window.localStorage) {
+            window.localStorage.setItem('userName', name);
+        }
         socket.emit('name', name);
     });
     $('#talk').submit(function (e) {
@@ -107,8 +110,13 @@ $(function() {
         if (!code_socks.isNewEditor(msg.id))
             return;
         shame(msg);
-    })
-    socket.emit('join', window.codeprops.codeId);
+    });
+    var opts = {};
+    if (window.localStorage) {
+        opts.name = window.localStorage.getItem('userName');
+    }
+    opts.room = window.codeprops.codeId;
+    socket.emit('join', opts);
 
 });
 
