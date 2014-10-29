@@ -22,4 +22,13 @@ html
       span.navbutton.fa.fa-navicon
       .menu
     #user-menu
+      .user-id
+        span You are:
+        span.name
+        span.self-icon.fa.fa-user
+      .set-user-id
+        a(href="#") Change name
+      form#settings
+        input(type="text" id="name")
+        button#set-name Set Name
     block content

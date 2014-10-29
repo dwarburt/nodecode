@@ -1,12 +1,6 @@
 $(function() {
     var socket = io();
     var messages = $('#messages');
-    function log(msg) {
-        messages.append($('<div>').text(msg));
-    }
-    function updateCount(msg) {
-        $('#user-count').text(msg.count);
-    }
     var code_socks = {
         id: null,
         editor: null,
@@ -17,6 +11,31 @@ $(function() {
             return true;
         }
     };
+    function log(msg) {
+        messages.append($('<div>').text(msg));
+    }
+    function updateCount(msg) {
+        $('#user-count').text(msg.count);
+    }
+    function setMyName(name) {
+        if (window.localStorage) {
+            window.localStorage.setItem('userName', name);
+        }
+        $('#user-list').find('#' + code_socks.id).text(name);
+        $('#user-menu .user-id .name').text(name);
+    }
+    function tellName(name) {
+        socket.emit('name', name);
+    }
+
+    if (window.localStorage) {
+        code_socks.name = localStorage.getItem('userName');
+        if (code_socks.name) {
+            setMyName(code_socks.name);
+            tellName(code_socks.name);
+        }
+    }
+
     socket.on('id', function (msg) {
         code_socks.id = msg.id;
     });
@@ -26,8 +45,6 @@ $(function() {
     });
     socket.on('part', function (msg) {
         console.log("Removing: " + msg.id);
-        updateCount(msg);
-
         $('#user-list').find('#' + msg.id).remove();
     });
     socket.on('name', function (msg) {
@@ -39,11 +56,10 @@ $(function() {
 
     $('#set-name').click(function () {
         var name = $('#name').val();
-        if (window.localStorage) {
-            window.localStorage.setItem('userName', name);
-        }
-        socket.emit('name', name);
+        setMyName(name);
+        tellName(name);
     });
+
     $('#talk').submit(function (e) {
         e.preventDefault();
         var msg = $('#chatmsg').val();
@@ -127,8 +143,8 @@ $(function() {
         shame(msg);
     });
     var opts = {};
-    if (window.localStorage) {
-        opts.name = window.localStorage.getItem('userName');
+    if (code_socks.name) {
+        opts.name = code_socks.name;
     }
     opts.room = window.codeprops.codeId;
     socket.emit('join', opts);

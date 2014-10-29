@@ -47,6 +47,9 @@ a {
   cursor: pointer;
   color: rgba(182, 37, 76, 0.75);
 }
+/*
+ * User menu
+ */
 #user-menu {
   position: absolute;
   top:50px;
@@ -57,6 +60,7 @@ a {
   z-index:999;
   display:none;
 }
+
 /*
  * Sidebar
  */
