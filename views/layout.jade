@@ -2,6 +2,7 @@ doctype html
 html
   head
     title= title
+    link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/lib/codemirror.css')
 
@@ -12,11 +13,12 @@ html
     if code
       script(type="text/javascript").
         window.codeprops = {
-          code: "#{code.code && code.code.replace("\n", "\\n")}",
-          codeId: "#{code && code._id}"
+          code: "#{code.code.replace("\n", "\\n")}",
+          codeId: "#{code._id}"
         };
   body
     #header
       .title NodeCode
+      span.navbutton.fa.fa-navicon
       .menu
     block content

@@ -1,7 +1,20 @@
+/*
+ * General rules
+ */
 body {
   margin: 0px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+a {
+  color: #00B7FF;
+}
+#hidden {
+  display:none;
+}
+
+ /*
+  * Header
+  */
 #header {
   height: 50px;
   background-color: #4679bd;
@@ -15,6 +28,30 @@ body {
   background-color: #3E313C;
   height: 50px;
 }
+#settings {
+  display:none;
+}
+.navbutton {
+  font-size: 30px;
+  padding: 3px 5px 3px 5px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  border-radius: 7px;
+  margin: 6px;
+  background-color: rgba(255, 255, 255, 0.25);
+  color: rgba(182, 37, 76, 0.50);
+  float:right;
+}
+.navbutton:hover {
+  font-size: 31px;
+  background-color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  color: rgba(182, 37, 76, 0.75);
+}
+
+/*
+ * Sidebar
+ */
+
 #chat-zone {
   float:right;
   padding: 0 7px 0 10px;
@@ -25,30 +62,6 @@ body {
   right: 0px;
   height: 100%;
 }
-#work-zone {
-  margin-right: 200px;
-}
-#settings {
-  display:none;
-}
-#talk {
-  float: right;
-  width: 200px;
-  background: #3e313c;
-  border-top: 2px solid #372c36;
-  padding: 10px 7px 0px 10px;
-  height: 4rem;
-  position: fixed;
-  bottom: 0;
-  right: 0;
-}
-a {
-  color: #00B7FF;
-}
-#hidden {
-  display:none;
-}
-
 #messages {
   font-size: 12px;
   width: 190px;
@@ -72,6 +85,24 @@ a {
 #user-list .editor {
 
 }
+#talk {
+  float: right;
+  width: 200px;
+  background: #3e313c;
+  border-top: 2px solid #372c36;
+  padding: 10px 7px 0px 10px;
+  height: 4rem;
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+/*
+ * work area
+ */
+#work-zone {
+  margin-right: 200px;
+}
+
 #code {
 
 }
