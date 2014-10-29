@@ -47,7 +47,16 @@ a {
   cursor: pointer;
   color: rgba(182, 37, 76, 0.75);
 }
-
+#user-menu {
+  position: absolute;
+  top:50px;
+  right:217px;
+  height: 400px;
+  width: 200px;
+  background: rgba(18, 163, 130, 0.5);
+  z-index:999;
+  display:none;
+}
 /*
  * Sidebar
  */

@@ -55,6 +55,21 @@ $(function() {
     $('#compile').click(function () {
         socket.emit('compile', {code: codeMirror.getValue() });
     });
+    $('#header .navbutton').click(function () {
+        var self = $(this);
+        if (self.data('open')) {
+            self.removeClass('fa-toggle-up');
+            self.addClass('fa-navicon');
+            self.data('open', false);
+            $('#user-menu').slideUp();
+        }
+        else {
+            self.removeClass('fa-navicon');
+            self.addClass('fa-toggle-up');
+            self.data('open', true);
+            $('#user-menu').slideDown();
+        }
+    });
     socket.on('compilation', function (msg) {
         $('#output').text(msg.output);
     });
