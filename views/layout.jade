@@ -9,5 +9,10 @@ html
     script(src="/lib/codemirror-compressed.js")
     script(src="/socket.io/socket.io.js")
     script(src="/javascripts/code_socks.js")
+    script(type="text/javascript").
+      window.codeprops = {
+        code: "#{code.code.replace("\n", "\\n")}",
+        codeId: "#{code._id}"
+      };
   body
     block content

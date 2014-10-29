@@ -1,7 +1,6 @@
 $(function() {
     var socket = io();
     var messages = $('#messages');
-    var codeId = $('#hidden_id').text();
     function log(msg) {
         messages.append($('<div>').text(msg));
     }
@@ -58,7 +57,7 @@ $(function() {
      * Codemirror
      */
     var codeMirror = CodeMirror($('#code')[0], {
-        value: $('#hidden_code').text(),
+        value: window.codeprops.code,
         mode: "clike",
         readOnly: true,
         lineNumbers: true
@@ -106,7 +105,7 @@ $(function() {
             return;
         shame(msg);
     })
-    socket.emit('join', codeId);
+    socket.emit('join', window.codeprops.codeId);
 
 });
 
