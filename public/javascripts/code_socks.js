@@ -42,6 +42,9 @@ $(function() {
     socket.on('join', function (msg) {
         updateCount(msg);
         $('#user-list').append($('<div>').attr('id', msg.id).addClass("participant").text(msg.name));
+        if (msg.id == code_socks.id) {
+            setMyName(msg.name);
+        }
     });
     socket.on('part', function (msg) {
         console.log("Removing: " + msg.id);
@@ -49,6 +52,9 @@ $(function() {
     });
     socket.on('name', function (msg) {
         $('#user-list').find('#' + msg.id).text(msg.name);
+        if (msg.id == code_socks.id) {
+            setMyName(msg.name);
+        }
     });
     socket.on('chat', function (msg) {
         log(msg.name + " says: " + msg.msg);
