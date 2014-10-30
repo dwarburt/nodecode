@@ -3,6 +3,10 @@ $(function() {
     var code_socks = {
         id: null,
         editor: null,
+        people: { },
+        amEditor: function() {
+            return this.id === this.editor;
+        },
         isNewEditor: function (id) {
             if (this.editor == id)
                 return false;
@@ -45,13 +49,40 @@ $(function() {
     socket.on('id', function (msg) {
         code_socks.id = msg.id;
     });
+    var chosenParticipant;
     socket.on('join', function (msg) {
         updateCount(msg);
         var nu = $('<div>').attr('id', msg.id).addClass("participant").text(msg.name);
         $('#user-list').append(nu);
+        nu.click(function () {
+            if (chosenParticipant === $(this).attr('id')) {
+                return;
+            }
+            chosenParticipant = $(this).attr('id');
+            var omen = $('#other-user-menu');
+            omen.hide();
+            omen.find('.name').text(code_socks.people[chosenParticipant]);
+            if (code_socks.amEditor() && chosenParticipant != code_socks.id) {
+                omen.find('.elevate').show();
+            } else {
+                omen.find('.elevate').hide();
+            }
+            omen.show("slide", {direction: "right"});
+        })
         if (msg.id == code_socks.id) {
             setMyName(msg.name);
         }
+    });
+    $('#other-user-menu').find('close-button').click(function (e) {
+        e.preventDefault();
+        $('#other-user-menu').hide("slide", {direction: "left"});
+        chosenParticipant = null;
+        return false;
+    });
+    $('#other-user-menu').find('.elevate').click( function (e) {
+        e.preventDefault();
+        socket.emit('promote', {id: chosenParticipant});
+        return false;
     });
     socket.on('part', function (msg) {
         console.log("Removing: " + msg.id);
@@ -62,12 +93,13 @@ $(function() {
         if (msg.id == code_socks.id) {
             setMyName(msg.name);
         }
+        code_socks.people[msg.id] = msg.name;
     });
     socket.on('chat', function (msg) {
         log(msg.msg, msg.name);
     });
 
-    $('.set-user-id a').click(function (e) {
+    $('.set-user-name a').click(function (e) {
         e.preventDefault();
         $('#settings').show();
         $(this).hide();
@@ -77,7 +109,7 @@ $(function() {
         setMyName(name);
         tellName(name);
         $('#settings').hide();
-        $('.set-user-id a').show();
+        $('.set-user-name a').show();
     });
     $('#settings').submit(function (e) {
         e.preventDefault();

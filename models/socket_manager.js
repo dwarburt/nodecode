@@ -120,12 +120,17 @@ module.exports = {
                 self.elevate(socket);
             }
         });
-        socket.on('promote', function (name) {
-            self.eachOther(socket, function (idx) {
-                if (name != idx.name) {
-                    idx.emit('editor')
-                }
-            })
+        socket.on('promote', function (msg) {
+            var newEditor = self.sockBucket[msg.id];
+            var room = self.rooms[socket.room];
+            if (newEditor && room.editor == socket.id) {
+                self.elevate(newEditor);
+            }
+            // self.eachOther(socket, function (idx) {
+            //     if (name != idx.name) {
+            //         idx.emit('editor')
+            //     }
+            // })
         });
         socket.on('compile', function (msg) {
             var room = self.rooms[socket.room];
