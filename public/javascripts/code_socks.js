@@ -1,6 +1,5 @@
 $(function() {
     var socket = io();
-    var messages = $('#messages');
     var code_socks = {
         id: null,
         editor: null,
@@ -11,8 +10,14 @@ $(function() {
             return true;
         }
     };
-    function log(msg) {
-        messages.append($('<div>').text(msg));
+    $(window).resize(function () {
+        $('#messages').css('max-height', $(window).height() - $('#messages').offset().top - $('#talk').height() + 10 );
+    });
+    $('#messages').css('max-height', $(window).height() - $('#messages').offset().top - $('#talk').height() + 10 );
+    function log(msg, from) {
+        var bubble = $('<div>').addClass('bubble').text(msg);
+        var name = $('<div>').addClass('name').text(from || "System");
+        $('#messages').append($('<div>').append(name, bubble));
     }
     function updateCount(msg) {
         $('#user-count').text(msg.count);
@@ -21,7 +26,8 @@ $(function() {
         if (window.localStorage) {
             window.localStorage.setItem('userName', name);
         }
-        $('#user-list').find('#' + code_socks.id).text(name);
+        $('#user-list').find('#' + code_socks.id).text(name)
+            .append($('<span>').addClass('fa fa-user'));
         $('#user-menu .user-id .name').text(name);
     }
     function tellName(name) {
@@ -41,7 +47,8 @@ $(function() {
     });
     socket.on('join', function (msg) {
         updateCount(msg);
-        $('#user-list').append($('<div>').attr('id', msg.id).addClass("participant").text(msg.name));
+        var nu = $('<div>').attr('id', msg.id).addClass("participant").text(msg.name);
+        $('#user-list').append(nu);
         if (msg.id == code_socks.id) {
             setMyName(msg.name);
         }
@@ -57,13 +64,20 @@ $(function() {
         }
     });
     socket.on('chat', function (msg) {
-        log(msg.name + " says: " + msg.msg);
+        log(msg.msg, msg.name);
     });
 
+    $('.set-user-id a').click(function (e) {
+        e.preventDefault();
+        $('#settings').show();
+        $(this).hide();
+    })
     $('#set-name').click(function () {
         var name = $('#name').val();
         setMyName(name);
         tellName(name);
+        $('#settings').hide();
+        $('.set-user-id a').show();
     });
 
     $('#talk').submit(function (e) {
