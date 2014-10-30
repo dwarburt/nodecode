@@ -73,6 +73,10 @@ a {
   padding: 3px;
   color: red;
   cursor: pointer;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0px 0px 1px 1px rgba(0, 0, 0, .5);
+  font-size: 10px;
 }
 #other-user-menu {
   /* Include .flyout */
@@ -80,6 +84,7 @@ a {
   right:217px;
   width: 100px;
   height: 100px;
+  background-color: rgba(208, 190, 190, 0.87);
 }
 #other-user-menu a.elevate {
   display: none;

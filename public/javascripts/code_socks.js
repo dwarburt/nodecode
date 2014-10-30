@@ -53,6 +53,7 @@ $(function() {
     socket.on('join', function (msg) {
         updateCount(msg);
         var nu = $('<div>').attr('id', msg.id).addClass("participant").text(msg.name);
+        code_socks.people[msg.id] = msg.name;
         $('#user-list').append(nu);
         nu.click(function () {
             if (chosenParticipant === $(this).attr('id')) {
@@ -61,21 +62,25 @@ $(function() {
             chosenParticipant = $(this).attr('id');
             var omen = $('#other-user-menu');
             omen.hide();
-            omen.find('.name').text(code_socks.people[chosenParticipant]);
+            var oname = code_socks.people[chosenParticipant];
+            omen.find('.name').text(oname);
             if (code_socks.amEditor() && chosenParticipant != code_socks.id) {
                 omen.find('.elevate').show();
             } else {
                 omen.find('.elevate').hide();
             }
+            $('#other-user-men')
+                .find('.elevate')
+                .text("Make " + oname + " the editor.");
             omen.show("slide", {direction: "right"});
         })
         if (msg.id == code_socks.id) {
             setMyName(msg.name);
         }
     });
-    $('#other-user-menu').find('close-button').click(function (e) {
+    $('#other-user-menu').find('.close-button').click(function (e) {
         e.preventDefault();
-        $('#other-user-menu').hide("slide", {direction: "left"});
+        $('#other-user-menu').hide("slide", {direction: "right"});
         chosenParticipant = null;
         return false;
     });

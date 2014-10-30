@@ -192,7 +192,7 @@ module.exports = {
     elevate: function(socket) {
         var self = this;
         var room = self.rooms[socket.room];
-        socket.emit('elevate', {id: socket.id});
+        socket.emit('elevate', {id: socket.id, name: socket.name});
         room.editor = socket.id;
         self.eachOther(socket, function (idx) {
             idx.emit('editor', {id: room.editor});
