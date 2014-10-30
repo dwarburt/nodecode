@@ -79,7 +79,10 @@ $(function() {
         $('#settings').hide();
         $('.set-user-id a').show();
     });
-
+    $('#settings').submit(function (e) {
+        e.preventDefault();
+        return false;
+    })
     $('#talk').submit(function (e) {
         e.preventDefault();
         var msg = $('#chatmsg').val();
@@ -135,22 +138,28 @@ $(function() {
             }
         }
     });
+    var editorSymbol = $('#editor-symbol');
+    function switchEditor(id) {
+        $('#user-list').find('.editor').removeClass('editor');
+        var newed = $('#user-list').find('#' + id);
+        newed.addClass('editor');
+        editorSymbol.appendTo(newed);
+        editorSymbol.show();
+    }
     function elevate(msg) {
 
         codeMirror.on('changes', onEdit);
         codeMirror.setOption('readOnly', false);
         $('#compile').attr('disabled', false);
         log("YOU are now the editor");
-        $('#user-list').find('.editor').removeClass('editor');
-        $('#user-list').find('#' + msg.id).addClass('editor');
+        switchEditor(msg.id);
     }
     function shame(msg) {
         codeMirror.off('changes', onEdit);
         codeMirror.setOption('readOnly', true);
         $('#compile').attr('disabled', true);
         log(msg.name + " is now the editor");
-        $('#user-list').find('.editor').removeClass('editor');
-        $('#user-list').find('#' + msg.id).addClass('editor');
+        switchEditor(msg.id);
     }
     socket.on('elevate', function (msg) {
         if (!code_socks.isNewEditor(msg.id))
