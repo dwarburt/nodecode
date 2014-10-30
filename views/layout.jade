@@ -5,6 +5,8 @@ html
     link(rel="stylesheet", href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css")
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/lib/codemirror.css')
+    link(rel="stylesheet", href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css")
+  
 
     script(src="//code.jquery.com/jquery-1.11.1.min.js")
     script(src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js")
@@ -25,7 +27,7 @@ html
     #other-user-menu.flyout
       span.close-button.fa.fa-close
       br
-      | Name
+      | Name: 
       span.name
       br
       a.elevate(href="#") Make this user the editor
@@ -39,4 +41,6 @@ html
       form#settings
         input(type="text" id="name")
         button#set-name Set Name
+      div
+        a.show-help(href="#") Show help
     block content

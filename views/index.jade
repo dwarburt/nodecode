@@ -19,3 +19,16 @@ block content
         input(type="text" id="chatmsg")
         button#send-message Send message
 
+  div#help
+    h1 This is 
+      em NodeCode
+    div
+      p NodeCode is an web interface to gcc 4.8.
+      p Share the link to this room to invite other users to view your code.
+      p 
+      | Only one person can be the editor at a time, they will have 
+      span.fa.fa-edit
+      |  next to their name in the user list (top right).
+      p If you are the editor, you can pass to someone else by clicking their name
+      p At any time, the editor can click the compile button.  The code will be saved to a file on the server and compiled to an executable (in C++ mode), and then executed.  All users will see the output of the compilation and execution.
+

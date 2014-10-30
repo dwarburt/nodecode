@@ -195,7 +195,7 @@ module.exports = {
         socket.emit('elevate', {id: socket.id, name: socket.name});
         room.editor = socket.id;
         self.eachOther(socket, function (idx) {
-            idx.emit('editor', {id: room.editor});
+            idx.emit('editor', {id: socket.id, name: socket.name});
         });
     },
     broadcast: function(room, event, msg) {

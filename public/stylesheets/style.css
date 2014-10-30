@@ -14,7 +14,12 @@ a {
 .clear {
   clear:both;
 }
-
+/*
+ * Help
+ */
+ #help {
+  display: none;
+ }
  /*
   * Header
   */
@@ -86,6 +91,9 @@ a {
   height: 100px;
   background-color: rgba(208, 190, 190, 0.87);
 }
+#user-menu > div, #user-menu > form {
+  margin: 15px;
+} 
 #other-user-menu a.elevate {
   display: none;
 }

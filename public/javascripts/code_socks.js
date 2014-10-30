@@ -14,6 +14,7 @@ $(function() {
             return true;
         }
     };
+    var editorSymbol = $('#editor-symbol');
     $(window).resize(function () {
         $('#messages').css('max-height', $(window).height() - $('#messages').offset().top - $('#talk').height() + 10 );
     });
@@ -30,9 +31,13 @@ $(function() {
         if (window.localStorage) {
             window.localStorage.setItem('userName', name);
         }
-        $('#user-list').find('#' + code_socks.id).text(name)
+        var me = $('#user-list').find('#' + code_socks.id).text(name)
             .append($('<span>').addClass('fa fa-user'));
+
         $('#user-menu .user-id .name').text(name);
+        if (code_socks.amEditor()) {
+            editorSymbol.appendTo(me);
+        }
     }
     function tellName(name) {
         socket.emit('name', name);
@@ -69,7 +74,7 @@ $(function() {
             } else {
                 omen.find('.elevate').hide();
             }
-            $('#other-user-men')
+            $('#other-user-menu')
                 .find('.elevate')
                 .text("Make " + oname + " the editor.");
             omen.show("slide", {direction: "right"});
@@ -175,7 +180,7 @@ $(function() {
             }
         }
     });
-    var editorSymbol = $('#editor-symbol');
+
     function switchEditor(id) {
         $('#user-list').find('.editor').removeClass('editor');
         var newed = $('#user-list').find('#' + id);
@@ -214,6 +219,16 @@ $(function() {
     }
     opts.room = window.codeprops.codeId;
     socket.emit('join', opts);
+
+    if (window.localStorage && !window.localStorage.getItem('seenHelp')) {
+        window.localStorage.setItem('seenHelp', true);
+        $('#help').dialog();
+    }
+    $('a.show-help').click(function (e) {
+        e.preventDefault();
+        $('#help').dialog();
+        return false;
+    });
 
 });
 
