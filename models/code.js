@@ -8,7 +8,8 @@ function Options(id) {
   this.method = 'PUT';
 };
 var starterCode = "/* code here */\n";
-//var starterCode = "#include <stdio.h>\n\nint main(int, char**)\n{\n    printf(\"hello world.\\n\");\n    return 0;\n}";
+
+
 module.exports = {
     create: function (lang, next) {
         var id = shortId.generate();
