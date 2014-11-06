@@ -221,14 +221,20 @@ a {
   margin-right: 217px;
 }
 
+#toolbar li {
+  list-style: none;
+}
+
 #code {
   float: left;
   width: 50%;
   min-width: 350px;
 }
+
 #output {
   overflow: auto;
 }
+
 @media (max-width: 615px) {
   #chat-zone {
     display:none;
