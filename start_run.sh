@@ -7,6 +7,6 @@ export NODECODE_HOME="/tmp/"
 export NODECODE_EXEC_PREFIX=" "
 
 node app.js &
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome http://localhost:3000/code/bJDoTeePB
-/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome http://localhost:3000/code/bJDoTeePB
+#/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome http://localhost:3000/code/bJDoTeePB
+#/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome http://localhost:3000/code/bJDoTeePB
 

@@ -230,11 +230,11 @@ a {
   width: 50%;
   min-width: 350px;
 }
-.CodeMirror {
+#code .CodeMirror {
   border: 1px solid #eee;
   height: auto;
 }
-.CodeMirror-scroll {
+#code .CodeMirror-scroll {
   overflow-y: hidden;
   overflow-x: auto;
 }
