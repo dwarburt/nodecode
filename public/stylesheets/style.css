@@ -32,7 +32,6 @@ a {
 #header .title {
   float: right;
   width: 200px;
-  padding: 0 7px 0 10px;
   font-size: 40px;
   color: #FFF;
   background-color: #3E313C;
@@ -86,7 +85,7 @@ a {
 #other-user-menu {
   /* Include .flyout */
   top:50px;
-  right:217px;
+  right:200px;
   width: 100px;
   height: 100px;
   background-color: rgba(208, 190, 190, 0.87);
@@ -100,8 +99,9 @@ a {
 #user-menu {
   /* Include .flyout */
   top:50px;
-  right:217px;
+  right:200px;
   width: 200px;
+  background-color: rgba(190, 208, 195, 0.87);
 }
 #user-menu a {
   color: rgb(64, 64, 189);
@@ -209,7 +209,7 @@ a {
   background: #3e313c;
   border-top: 2px solid #372c36;
   padding: 10px 7px 0px 10px;
-  height: 4rem;
+  height: 90px;
   position: fixed;
   bottom: 0;
   right: 0;
