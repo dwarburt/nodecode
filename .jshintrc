@@ -1,0 +1,7 @@
+{
+  "quotmark": false,
+  "strict": false,
+  "undef": true,
+  "unused": true,
+  "node": true
+}
