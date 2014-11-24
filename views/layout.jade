@@ -11,13 +11,18 @@ html
     link(rel='stylesheet', href='/stylesheets/style.css')
     link(rel='stylesheet', href='/lib/codemirror.css')
 
+    script(type="text/javascript").
+      window.codeprops = {};
 
     if code
       script(type="text/javascript").
-        window.codeprops = {
-          code: "#{code.code.replace("\n", "\\n")}",
-          codeId: "#{code._id}"
-        };
+        window.codeprops.code = "#{code.code.replace("\n", "\\n")}";
+        window.codeprops.codeId = "#{code._id}";
+
+    if user
+      script(type="text/javascript").
+        window.codeprops.userName = "#{user.name}"
+
   body
     #header
       .title NodeCode
@@ -37,6 +42,11 @@ html
         span.self-icon.fa.fa-user
       .set-user-name
         a(href="#") Change name
+      .user-control
+        if user
+          a(href="#") Logout
+        else
+          a(href="#") Login
       form#settings
         input(type="text" id="name")
         button#set-name Set Name

@@ -43,12 +43,14 @@ $(function() {
         socket.emit('name', name);
     }
 
-    if (window.localStorage) {
+    if (window.codeprops.userName) {
+        code_socks.name = window.codeprops.userName;
+    } else if (window.localStorage) {
         code_socks.name = localStorage.getItem('userName');
-        if (code_socks.name) {
-            setMyName(code_socks.name);
-            tellName(code_socks.name);
-        }
+    }
+    if (code_socks.name) {
+        setMyName(code_socks.name);
+        tellName(code_socks.name);
     }
 
     socket.on('id', function (msg) {
@@ -78,7 +80,7 @@ $(function() {
                 .find('.elevate')
                 .text("Make " + oname + " the editor.");
             omen.show("slide", {direction: "right"});
-        })
+        });
         if (msg.id == code_socks.id) {
             setMyName(msg.name);
         }
@@ -113,7 +115,7 @@ $(function() {
         e.preventDefault();
         $('#settings').show();
         $(this).hide();
-    })
+    });
     $('#set-name').click(function () {
         var name = $('#name').val();
         setMyName(name);
@@ -124,15 +126,15 @@ $(function() {
     $('#settings').submit(function (e) {
         e.preventDefault();
         return false;
-    })
+    });
     $('#talk').submit(function (e) {
         e.preventDefault();
         var msg = $('#chatmsg').val();
-        if (msg != "") {
+        if (msg !== "") {
             socket.emit('chat', msg);
         }
         $('#chatmsg').val("");
-    })
+    });
     $('#compile').click(function () {
         socket.emit('compile', {code: codeMirror.getValue() });
     });
@@ -173,7 +175,7 @@ $(function() {
             codeMirror.setValue(msg.code);
         }
         else {
-            for (i = 0; i < msg.changes.length; i++) {
+            for (var i = 0; i < msg.changes.length; i++) {
                 var change = msg.changes[i];
                 codeMirror.replaceRange(change.text, change.from,
                     change.to, change.origin);

@@ -3,5 +3,11 @@
   "strict": false,
   "undef": true,
   "unused": true,
-  "node": true
+  "node": true,
+  "camelcase": true,
+  "globals": {
+    "$": false,
+    "jQuery": false,
+    "CodeMirror": false
+  }
 }

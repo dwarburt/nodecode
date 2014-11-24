@@ -19,7 +19,7 @@ router.param('codeid', function(req, res, next, id){
 
 router.get('/code/:codeid', function(req, res) {
     code.get(req.codeid, function (thisCode) {
-        res.render('index', {title: 'Nodecode', code: thisCode});
+        res.render('index', {title: 'Nodecode', code: thisCode, user: req.user});
     });
 });
 module.exports = router;

@@ -1,6 +1,6 @@
 var fs = require('fs');
 var shortid = require('shortid');
-var child_process = require('child_process');
+var childProcess = require('child_process');
 
 function Room(roomId) {
     this.count = 0;
@@ -11,7 +11,7 @@ function Room(roomId) {
         changes.forEach(function (chng) {
             self.code = change(self.code, chng);
         });
-    }
+    };
 }
 //input is a string
 //start and end are objects of the form {line: x, ch: y}
@@ -20,7 +20,7 @@ function Room(roomId) {
 function getPosition(input, start, end) {
     var ch = 0;
     var line = 0;
-    ret = {
+    var ret = {
         start: -1,
         end: -1
     };
@@ -44,14 +44,14 @@ function getPosition(input, start, end) {
     }
     return false;
 }
-function change(input, change) {
-    var pos = getPosition(input, change.from, change.to);
+function change(input, thisChange) {
+    var pos = getPosition(input, thisChange.from, thisChange.to);
     if (!pos) {
         return input;
     }
     var part1 = input.substr(0, pos.start);
     var part2 = input.substr(pos.end);
-    var newt  = change.text.join('\n');
+    var newt  = thisChange.text.join('\n');
     return [part1, newt, part2].join("");
 }
 module.exports = {
@@ -65,7 +65,7 @@ module.exports = {
         socket.name = shortid.generate();
         socket.emit('id', { id: socket.id });
         socket.on('disconnect', function(reason) {
-            console.log("Socket " + socket.id + " is gone.");
+            console.log("Socket " + socket.id + " is gone. (" + reason + ")");
             delete self.sockBucket[socket.id];
             if (socket.room) {
                 var room = self.rooms[socket.room];
@@ -84,6 +84,24 @@ module.exports = {
         socket.on('name', function (name) {
             socket.name = name;
             self.broadcast(socket.room, 'name', {id: socket.id, name: name});
+        });
+        socket.on('login', function (msg) {
+            self.User.login(null, msg.email, msg.password, function(err, user) {
+                if (err || !user) {
+                    return;
+                }
+                socket.user = user;
+                socket.emit('loginSuccess');
+                var room = self.rooms[socket.room];
+                if (!room.owner) {
+                    room.owner = user.email;
+                    socket.emit('ownership');
+                }
+
+            });
+        });
+        socket.on('register', function (msg) {
+            console.log(msg);
         });
         socket.on('chat', function (chatmsg) {
             self.broadcast(socket.room, 'chat', {name: socket.name, id: socket.id, msg: chatmsg});
@@ -132,13 +150,12 @@ module.exports = {
             //     }
             // })
         });
-        socket.on('compile', function (msg) {
+        socket.on('compile', function () {
             var room = self.rooms[socket.room];
             var tmphome = process.env.NODECODE_HOME || "/home/coder/rooms/";
 
             var tmpdir = tmphome + room.id;
-            var fs = require('fs');
-            var output = ""
+            var output = "";
             if (!fs.existsSync(tmpdir)) {
                 fs.mkdirSync(tmpdir);
             }
@@ -147,12 +164,12 @@ module.exports = {
                     self.broadcast(room.id, 'compilation', {output: "Failed to save file\nCopy your code to a new room\n" + err});
                 }
                 else {
-                    child_process.exec("g++ -Wall a.cpp", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
-                        if (stdOut && stdOut != "") {
+                    childProcess.exec("g++ -Wall a.cpp", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
+                        if (stdOut && stdOut !== "") {
                             output += stdOut;
                             output += "\n";
                         }
-                        if (stdErr && stdErr != "") {
+                        if (stdErr && stdErr !== "") {
                             output += stdErr;
                             output += "\n";
                         }
@@ -162,13 +179,13 @@ module.exports = {
                         }
                         else {
                             output += "Compilation success!\nRunning command\n\n";
-                            var command_prefix = process.env.NODECODE_EXEC_PREFIX || "sudo -u coder unshare -n ";
-                            child_process.exec(command_prefix + "./a.out", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
-                                if (stdOut && stdOut != "") {
+                            var commandPrefix = process.env.NODECODE_EXEC_PREFIX || "sudo -u coder unshare -n ";
+                            childProcess.exec(commandPrefix + "./a.out", {cwd: tmpdir, timeout: 60000}, function (error, stdOut, stdErr) {
+                                if (stdOut && stdOut !== "") {
                                     output += stdOut;
                                     output += "\n";
                                 }
-                                if (stdErr && stdErr != "") {
+                                if (stdErr && stdErr !== "") {
                                     output += stdErr;
                                     output += "\n";
                                 }
@@ -204,9 +221,10 @@ module.exports = {
             self.io.to(room).emit(event, msg);
         }
     },
-    manage: function(io) {
+    manage: function(io, User) {
         var self = this;
         self.io = io;
+        self.User = User;
 
         io.on('connection', function(socket){
             socket.name = socket.id;

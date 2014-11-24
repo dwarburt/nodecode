@@ -53,7 +53,7 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
-var sockMan = require('./models/socket_manager.js').manage(io);
+var sockMan = require('./models/socket_manager.js').manage(io, User);
 
 
 // error handlers
