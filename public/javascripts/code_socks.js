@@ -138,6 +138,10 @@ $(function() {
     $('#compile').click(function () {
         socket.emit('compile', {code: codeMirror.getValue() });
     });
+    function toggleUserMenu() {
+        $('#header .navbutton').click();
+    }
+
     $('#header .navbutton').click(function () {
         var self = $(this);
         if (self.data('open')) {
@@ -228,7 +232,54 @@ $(function() {
     }
     $('a.show-help').click(function (e) {
         e.preventDefault();
+        toggleUserMenu();
         $('#help').dialog();
+        return false;
+    });
+    function loginSubmit() {
+        var login = $('#login-form');
+        var msg = {
+            email: login.find('input[name=email]').val(),
+            password: login.find('input[name=password]').val()
+        };
+        if (login.data('register')) {
+            msg.confirm = login.find('input[name=passwordConfirmation]').val();
+            msg.beta = login.find('input[name=betaCode]').val();
+            socket.emit('register', msg);
+        } else {
+            socket.emit('login', msg);
+        }
+    }
+    socket.on('loginSuccess', function (msg) {
+        alert("You done did logged in.");
+    });
+    socket.on('loginFailed', function (msg) {
+        alert("You did not done logged in.");
+    });
+    socket.on('registerFailed', function (msg) {
+        alert("You did not register: " + msg.reason);
+    });
+    $('#show-login').click(function (e) {
+        e.preventDefault();
+        toggleUserMenu();
+        $('#login').dialog({width:400, modal:true, title:"Login", buttons: [
+            { text: "OK", click: loginSubmit },
+            { text: "Cancel", click: function () { $(this).dialog("close"); } }
+        ]});
+        return false;
+    });
+    $('#register').click(function (e) {
+        var login = $('#login-form');
+        e.preventDefault();
+        if (! login.data('register')) {
+            login.data('register', true);
+            $('div.registration').show();
+            $(this).text('Login');
+        } else {
+            login.data('register', false);
+            $('div.registration').hide();
+            $(this).text('Register');
+        }
         return false;
     });
 

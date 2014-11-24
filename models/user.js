@@ -55,7 +55,9 @@ var User = {
     });
   },
   signup: function(req, email, password, done) {
+    console.log("Preparing signup");
     User.findByEmail(email, function(err, user) {
+      console.log("User.findByEmail has returned.");
       if (err) {
         return done(err);
       }
@@ -65,12 +67,16 @@ var User = {
       var newUser = {
         email: email,
         password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
-      }; 
+      };
+      console.log("Preparing to insert.");
       users.insert(newUser, function (err) {
+        console.log("It has been inserted.");
         if (err) {
           done(err);
           throw(err);
         }
+        console.log("Returning");
+        console.log(newUser);
         return done(null, newUser);
       });
     });

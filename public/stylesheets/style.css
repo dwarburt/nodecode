@@ -243,6 +243,19 @@ a {
   overflow: auto;
 }
 
+#login {
+  display:none;
+}
+#login-form label {
+  width: 110px;
+}
+#login-form div.registration {
+  display:none;
+  margin-top: 20px;
+}
+#login-form #register {
+    color: #00B7FF;
+}
 @media (max-width: 615px) {
   #chat-zone {
     display:none;

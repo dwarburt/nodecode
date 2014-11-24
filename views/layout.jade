@@ -24,40 +24,6 @@ html
         window.codeprops.userName = "#{user.name}"
 
   body
-    #header
-      .title NodeCode
-      span.navbutton.fa.fa-navicon
-      .menu
-    #other-user-menu.flyout
-      span.close-button.fa.fa-close
-      br
-      | Name: 
-      span.name
-      br
-      a.elevate(href="#") Make this user the editor
-    #user-menu.flyout
-      .user-id
-        span You are:
-        span.name
-        span.self-icon.fa.fa-user
-      .set-user-name
-        a(href="#") Change name
-      .user-control
-        if user
-          a(href="#") Logout
-        else
-          a(href="#") Login
-      form#settings
-        input(type="text" id="name")
-        button#set-name Set Name
-      div
-        a.show-help(href="#") Show help
-    block content
-    script(src="//code.jquery.com/jquery-1.11.1.min.js")
-    script(src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js")
-    script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js")
 
-    script(src="/javascripts/noconflict.js")
-    script(src="/lib/codemirror-compressed.js")
-    script(src="/socket.io/socket.io.js")
-    script(src="/javascripts/code_socks.js")
+    block content
+

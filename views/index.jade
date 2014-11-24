@@ -1,6 +1,32 @@
 extends layout
 
 block content
+  #header
+    .title NodeCode
+    span.navbutton.fa.fa-navicon
+    .menu
+  #other-user-menu.flyout
+    span.close-button.fa.fa-close
+    br
+    | Name: 
+    span.name
+    br
+    a.elevate(href="#") Make this user the editor
+  #user-menu.flyout
+    .user-id
+      span You are:
+      span.name
+      span.self-icon.fa.fa-user
+    .set-user-name
+      a(href="#") Change name
+    .user-control
+      a#show-login(href="#")= user ? "logout" : "login"
+
+    form#settings
+      input(type="text" id="name")
+      button#set-name Set Name
+    div
+      a.show-help(href="#") Show help
   div#main-content
     div#work-zone
       h2 BETA BETA BETA
@@ -15,7 +41,7 @@ block content
     div#chat-zone
       span#editor-symbol.fa.fa-edit
       div#user-list
-        &nbsp;
+        | &nbsp;
       hr.clear
       div#messages
       form#talk
@@ -34,4 +60,32 @@ block content
       |  next to their name in the user list (top right).
       p If you are the editor, you can pass to someone else by clicking their name
       p At any time, the editor can click the compile button.  The code will be saved to a file on the server and compiled to an executable (in C++ mode), and then executed.  All users will see the output of the compilation and execution.
+
+  div#login
+    form#login-form(action="#")
+      div
+        label(for="email") Email
+        input(type="text" name="email" autofocus class="tabbable")
+      div
+        label(for="password") Password
+        input(type="password" name="password" class="tabbable")
+      div.registration
+        div
+          label(for="passwordConfirmation") Confirm Password
+          input(type="password" name="passwordConfirmation" class="tabbable")
+        div
+          label(for="betaCode") Beta code
+          input(type="text" name="betaCode" class="tabbable")
+      div
+        a(href="#" id="register") Register
+
+
+  script(src="//code.jquery.com/jquery-1.11.1.min.js")
+  script(src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js")
+  script(src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js")
+
+  script(src="/javascripts/noconflict.js")
+  script(src="/lib/codemirror-compressed.js")
+  script(src="/socket.io/socket.io.js")
+  script(src="/javascripts/code_socks.js")
 

@@ -85,23 +85,36 @@ module.exports = {
             socket.name = name;
             self.broadcast(socket.room, 'name', {id: socket.id, name: name});
         });
+        socket.login = function (err, user, actionFailed) {
+            if (err || !user) {
+                socket.emit(actionFailed);
+                return;
+            }
+            socket.user = user;
+            socket.emit('loginSuccess');
+            var room = self.rooms[socket.room];
+            if (!room.owner) {
+                room.owner = user.email;
+                socket.emit('ownership');
+            }
+        }
         socket.on('login', function (msg) {
-            self.User.login(null, msg.email, msg.password, function(err, user) {
-                if (err || !user) {
-                    return;
-                }
-                socket.user = user;
-                socket.emit('loginSuccess');
-                var room = self.rooms[socket.room];
-                if (!room.owner) {
-                    room.owner = user.email;
-                    socket.emit('ownership');
-                }
-
+            self.User.login(null, msg.email, msg.password, function (err, user) {
+                socket.login(err, user, 'loginFailed');
             });
         });
         socket.on('register', function (msg) {
-            console.log(msg);
+            if (msg.password != msg.confirm) {
+                socket.emit('registerFailed', {reason: "Passwords don't match" } );
+                return;
+            }
+            if (! msg.beta.match(/Blue Penguin/i) ) {
+                socket.emit('registerFailed', {reason: "Beta code is not correct" } );
+                return;
+            }
+            self.User.signup(null, msg.email, msg.password, function (err, user) {
+                socket.login(err, user, 'registerFailed');
+            });
         });
         socket.on('chat', function (chatmsg) {
             self.broadcast(socket.room, 'chat', {name: socket.name, id: socket.id, msg: chatmsg});
