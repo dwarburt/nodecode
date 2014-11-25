@@ -259,6 +259,9 @@ $(function() {
     socket.on('registerFailed', function (msg) {
         alert("You did not register: " + msg.reason);
     });
+    socket.on('error', function (msg) {
+        console.log("socket error: " + JSON.stringify(msg) );
+    });
     $('#show-login').click(function (e) {
         e.preventDefault();
         toggleUserMenu();

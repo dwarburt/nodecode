@@ -90,6 +90,7 @@ module.exports = {
                 socket.emit(actionFailed);
                 return;
             }
+            socket.request.logIn(user._id);
             socket.user = user;
             socket.emit('loginSuccess');
             var room = self.rooms[socket.room];
@@ -98,6 +99,10 @@ module.exports = {
                 socket.emit('ownership');
             }
         }
+        socket.on('logout', function (msg) {
+            socket.request.logOut();
+            socket.emit('logoutSuccess');
+        });
         socket.on('login', function (msg) {
             self.User.login(null, msg.email, msg.password, function (err, user) {
                 socket.login(err, user, 'loginFailed');

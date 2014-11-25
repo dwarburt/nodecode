@@ -7,9 +7,10 @@ var logger       = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
+var MongoStore   = require('connect-mongo')(session);
 var debug        = require('debug')('nodecode');
 var passport     = require('passport');
-
+var passSocket   = require("passport.socketio");
 // routes
 var routes       = require('./routes/index');
 var users        = require('./routes/users');
@@ -20,11 +21,10 @@ var User = require('./models/user');
 // spin up server
 var app = express();
 app.set('port', process.env.PORT || 3000);
-var server = http.createServer(app);
-server.listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
-});
-var io = require('socket.io').listen(server);
+app.set('secret', 'banana bread');
+app.set('cookie_name', 'connect.sid');
+
+var sessionStore = new MongoStore({url: "mongodb://localhost:27017/code/sessions"});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -37,11 +37,39 @@ app.use(logger('tiny'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(session({secret: "banana bread"}));
+app.use(session({
+    secret: app.get('secret'),
+    name:   app.get('cookie_name'),
+    store:  sessionStore
+}));
+app.use(function setSessionDuration(req, res, next) {
+  req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 7;
+  //                           ms     s    m    h   d -> 1 week.
+  next();
+})
 
 app.use(passport.initialize());
 app.use(passport.session());
 User.init(passport);
+
+var server = http.createServer(app);
+server.listen(app.get('port'), function(){
+  console.log('Express server listening on port ' + app.get('port'));
+});
+
+
+var io = require('socket.io')
+  .listen(server)
+  .use(passSocket.authorize({
+    cookieParser: cookieParser,
+    key:          app.get('cookie_name'),
+    secret:       app.get('secret'),
+    store:        sessionStore,
+    fail:         function (d,m,e,a) { a(null, true); }
+  }));
+
+  ;
+var sockMan = require('./models/socket_manager.js').manage(io, User);
 
 //setup routes
 app.use('/', routes);
@@ -53,8 +81,6 @@ app.use(function(req, res, next) {
     err.status = 404;
     next(err);
 });
-var sockMan = require('./models/socket_manager.js').manage(io, User);
-
 
 // error handlers
 
