@@ -48,6 +48,9 @@ $(function() {
     } else if (window.localStorage) {
         code_socks.name = localStorage.getItem('userName');
     }
+    if (window.codeprops.loggedIn) {
+        code_socks.loggedIn = true;
+    }
     if (code_socks.name) {
         setMyName(code_socks.name);
         tellName(code_socks.name);
@@ -251,7 +254,9 @@ $(function() {
         }
     }
     socket.on('loginSuccess', function (msg) {
-        alert("You done did logged in.");
+        $('#login').dialog('close');
+        $('#show-login').text('logout');
+        code_socks.loggedIn = true;
     });
     socket.on('loginFailed', function (msg) {
         alert("You did not done logged in.");
@@ -259,11 +264,20 @@ $(function() {
     socket.on('registerFailed', function (msg) {
         alert("You did not register: " + msg.reason);
     });
+    socket.on('logoutSuccess', function (msg) {
+        alert("You are logged out.");
+        code_socks.loggedIn = false;
+        $('#show-login').text('login');
+    })
     socket.on('error', function (msg) {
         console.log("socket error: " + JSON.stringify(msg) );
     });
     $('#show-login').click(function (e) {
         e.preventDefault();
+        if (code_socks.loggedIn) {
+            socket.emit('logout');
+            return;
+        }
         toggleUserMenu();
         $('#login').dialog({width:400, modal:true, title:"Login", buttons: [
             { text: "OK", click: loginSubmit },
