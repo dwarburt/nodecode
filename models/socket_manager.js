@@ -6,6 +6,7 @@ function Room(roomId) {
     this.count = 0;
     this.id = roomId;
     this.code = "/* code here */\n";
+    this.owner = null;
     this.applyChanges = function (changes) {
         var self = this;
         changes.forEach(function (chng) {
