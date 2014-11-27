@@ -38,9 +38,11 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session({
-    secret: app.get('secret'),
-    name:   app.get('cookie_name'),
-    store:  sessionStore
+    secret:            app.get('secret'),
+    name:              app.get('cookie_name'),
+    store:             sessionStore,
+    resave:            false,
+    saveUninitialized: false
 }));
 app.use(function setSessionDuration(req, res, next) {
   req.session.cookie.maxAge = 1000 * 60 * 60 * 24 * 7;

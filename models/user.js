@@ -39,8 +39,10 @@ var User = {
     });
   },
 
-  save: function (user) {
-    users.save(user);
+  save: function (user, done) {
+    users.save(user, function (err) {
+      done && done(err);
+    });
   },
   login: function (req, email, password, done) {
     User.findByEmail(email, function(err, user) { 
@@ -54,29 +56,20 @@ var User = {
       return done(null, false);
     });
   },
-  signup: function(req, email, password, done) {
-    console.log("Preparing signup");
-    User.findByEmail(email, function(err, user) {
-      console.log("User.findByEmail has returned.");
+  signup: function(req, newUser, done) {
+    User.findByEmail(newUser.email, function(err, user) {
       if (err) {
         return done(err);
       }
       if (user) {
         return done(null, false);
       }
-      var newUser = {
-        email: email,
-        password: bcrypt.hashSync(password, bcrypt.genSaltSync(10), null)
-      };
-      console.log("Preparing to insert.");
+      newUser.password = bcrypt.hashSync(newUser.password, bcrypt.genSaltSync(10), null);
       users.insert(newUser, function (err) {
-        console.log("It has been inserted.");
         if (err) {
           done(err);
           throw(err);
         }
-        console.log("Returning");
-        console.log(newUser);
         return done(null, newUser);
       });
     });

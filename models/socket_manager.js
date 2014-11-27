@@ -83,9 +83,9 @@ module.exports = {
         }   }   }   });
         socket.on('name', function (name) {
             socket.name = name;
-            if (socket.user) {
-                socket.user.name = name;
-                self.User.save(socket.user);
+            if (socket.request.user && socket.request.user.name != name) {
+                socket.request.user.name = name;
+                self.User.save(socket.request.user);
             }
             self.broadcast(socket.room, 'name', {id: socket.id, name: name});
         });
@@ -95,7 +95,7 @@ module.exports = {
                 return;
             }
             socket.request.logIn(user._id);
-            socket.user = user;
+            socket.request.user = user;
             socket.emit('loginSuccess');
             var room = self.rooms[socket.room];
             if (!room.owner) {
@@ -121,7 +121,8 @@ module.exports = {
                 socket.emit('registerFailed', {reason: "Beta code is not correct" } );
                 return;
             }
-            self.User.signup(null, msg.email, msg.password, function (err, user) {
+            var deets = {email: msg.email, password: msg.password, name: socket.name};
+            self.User.signup(null, deets, function (err, user) {
                 socket.login(err, user, 'registerFailed');
             });
         });
