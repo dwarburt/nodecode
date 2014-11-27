@@ -18,7 +18,7 @@
     "morgan": "~1.3.0",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
-    "passport.socketio": "git+https://github.com/dwarburt/passport.socketio.git",
+    "passport.socketio": "git+https://github.com/dwarburt/passport.socketio.git#login",
     "serve-favicon": "~2.1.3",
     "shortid": "^2.0.1",
     "socket.io": "^1.1.0"
