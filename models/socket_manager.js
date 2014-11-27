@@ -83,6 +83,10 @@ module.exports = {
         }   }   }   });
         socket.on('name', function (name) {
             socket.name = name;
+            if (socket.user) {
+                socket.user.name = name;
+                self.User.save(socket.user);
+            }
             self.broadcast(socket.room, 'name', {id: socket.id, name: name});
         });
         socket.login = function (err, user, actionFailed) {
