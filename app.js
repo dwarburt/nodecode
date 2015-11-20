@@ -23,8 +23,8 @@ var app = express();
 app.set('port', process.env.PORT || 3000);
 app.set('secret', 'banana bread');
 app.set('cookie_name', 'connect.sid');
-
-var sessionStore = new MongoStore({url: "mongodb://localhost:27017/code/sessions"});
+var mongoServer = process.env.MONGO_SERVER || locahost
+var sessionStore = new MongoStore({url: "mongodb://" + mongoServer + ":27017/code/sessions"});
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

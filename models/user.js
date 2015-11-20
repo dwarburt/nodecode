@@ -1,7 +1,9 @@
 var LocalStrategy   = require('passport-local').Strategy;
 var Mongo  = require('mongodb');
 var bcrypt = require('bcrypt-nodejs');
-var url = 'mongodb://localhost:27017/code';
+var mongoServer = process.env.MONGO_SERVER || locahost
+
+var url = 'mongodb://'+mongoServer+':27017/code';
 var users = null;
 
 Mongo.MongoClient.connect(url, function(err, db) {
